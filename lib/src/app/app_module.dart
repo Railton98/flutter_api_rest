@@ -12,7 +12,7 @@ class AppModule extends ModuleWidget {
 
   @override
   List<Dependency> get dependencies => [
-        Dependency((i) => CustomDio()),
+        Dependency((i) => CustomDio().createDio()),
       ];
 
   @override
