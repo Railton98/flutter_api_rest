@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api_rest/src/pages/home/home_bloc.dart';
 import 'package:flutter_api_rest/src/pages/home/home_module.dart';
+import 'package:flutter_api_rest/src/pages/home/subpages/create/create_page.dart';
 import 'package:flutter_api_rest/src/pages/update/update_page.dart';
 import 'package:flutter_api_rest/src/shared/models/post_model.dart';
 
@@ -30,34 +31,50 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SingleChildScrollView(
         child: StreamBuilder<List<PostModel>>(
-            stream: bloc.responseOut,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
-              }
+          stream: bloc.responseOut,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            }
 
-              if (snapshot.hasData) {
-                return Column(
-                  children: snapshot.data
-                      .map(
-                        (item) => ListTile(
-                          title: Text(item.title),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UpdatePage(
-                                          snapshot: item,
-                                        )));
-                          },
-                        ),
-                      )
-                      .toList(),
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            }),
+            if (snapshot.hasData) {
+              return Column(
+                children: snapshot.data
+                    .map(
+                      (item) => ListTile(
+                        title: Text(item.title),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UpdatePage(
+                                snapshot: item,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                    .toList(),
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePage(
+                onSuccess: bloc.getPosts,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
